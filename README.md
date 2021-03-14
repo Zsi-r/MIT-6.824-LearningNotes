@@ -1,11 +1,11 @@
 # MIT-6.824-LearningNotes
-The paper and details notes after learning MIT 6.824 Distributed System.
+Paper and notes after learning MIT 6.824 Distributed System.
 
 **大部分笔记都记录在Raft论文里了。**
 
 ---
 
-以下只是部分补充：
+以下只是raft的部分补充笔记：
 
 - **Leader Election领带人选举**：Leader宕机后选取新的Leader
 
