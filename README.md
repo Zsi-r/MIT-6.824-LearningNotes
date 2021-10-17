@@ -1,11 +1,15 @@
 # MIT-6.824-LearningNotes
-Paper and notes after learning MIT 6.824 Distributed System.
+Paper and notes about Distributed System.
 
-**大部分笔记都记录在Raft论文里了。**
+![duq7ofg2ra](img/duq7ofg2ra.jpeg)
 
 ---
 
-以下只是raft的部分补充笔记：
+## Raft算法
+
+> 大部分笔记都记录在Raft论文里了。以下只是raft的部分补充笔记。
+
+### Raft的4个主要内容（leader选举、日志复制、安全性、日志压缩）：
 
 - **Leader Election领带人选举**：Leader宕机后选取新的Leader
 
@@ -23,3 +27,23 @@ Paper and notes after learning MIT 6.824 Distributed System.
   - **何时发送InstallSnapshotRPC？**
 
     =>当Leader发送AppendEntryRPC是，发现目标Follower的nextIndex比自己第一个log的index还小时，就把自己的Snapshot发送给该Follower
+
+### 如何解决脑裂？
+
+- 
+
+---
+
+## Multi-Raft算法
+
+- 多个Raft集群，每个集群一个数据库分片，以达到负载均衡。多个Raft集群可以协同以减少资源开销
+- Multi-Raft --> **TiDB、CockroachDB、PolarDB**
+- Parallel-Raft是PolarDB中的Multi-Raft实现，通过支持乱序日志复制（乱序确认、乱序提交、乱序应用）等手段来提升性能。
+
+---
+
+## Basic-Paxos算法
+
+---
+
+## Multi-Paxos算法
