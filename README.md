@@ -30,7 +30,7 @@ Paper and notes about Distributed System.
 
 ### 1.2 如何解决脑裂？
 
-
+- 使用leader lease
 
 ## 2. Multi-Raft算法
 
@@ -49,6 +49,17 @@ Paper and notes about Distributed System.
 
 - 就**一个**提案达成一致
 - 与Basic-Paxos相比，Raft是强leader机制，必须要有leader
+- **Prepare阶段：**
+  - **PrepareA：**Proposer选择一个提案编号n并将Prepare请求发送给所有的Acceptor
+  - **PrepareB：**Acceptor收到Prepare消息后，如果提案的编号大于它已经回复的所有Prepare消息，则Acceptor将自己上次接受的提案回复给Proposer，并承诺不在回复小于n的提案。
+- **Acceptor阶段：**
+  - **AcceptorA：**当一个Proposer受到了多数Acceptor对Prepare的回复（Promised）后，就进入Acceptor阶段。
+    - 如果所有Acceptor都没接受过value，那么就向所有的Acceptor发起自己的value和提案编号n。
+    - 否则，从所有接受过的value中选择对应的提案编号最大的，作为提案的value，提案编号仍为n。
+  - **AcceptorB：**在不违背自己向其它Proposer的承诺的前提下，Acceptor收到Accept请求后即接受这个请求。
+- Prepare阶段有两个目的：
+  - 检查是否有被批准的之，如果有，就改用批准的值。
+  - 如果之前的提案还没有被批准，则阻塞它们，避免它们和我们发生竞争。当然最终由提案编号的大小决定。
 
 ### 3.2 Multi-Paxos算法
 
@@ -60,7 +71,7 @@ Paper and notes about Distributed System.
 
 #### 3.2.1 Raft和Multi-Paxos的区别
 
-- 两点区别：
+- 四点区别：
   - Raft的append 操作必须是连续的， 而Paxos可以并发 (这里并发只是append log的并发, 应用到状态机还是有序的)。
   - Raft必须有leader，paxos可以没有leader
   - Raft选主有限制，必须包含最新、最全日志的节点才能被选为leader。而Multi-Paxos没有这个限制，日志不完备的节点也能成为leader。
